@@ -31,6 +31,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+directus/data*
+directus/database*
+directus/extensions*
+directus/templates*
+directus/uploads*
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
