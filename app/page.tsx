@@ -1,6 +1,5 @@
 import { ButtonLink } from "@components/button-link";
 
-
-export default function Home() {
+export default async function Home() {
   return <ButtonLink href="/sign-in">Test</ButtonLink>;
 }
