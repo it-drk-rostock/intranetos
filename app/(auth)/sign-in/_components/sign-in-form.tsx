@@ -14,20 +14,27 @@ import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { signInProviders } from "../_constants";
 import { signInSchema } from "../_schemas";
+import { signIn } from "../_actions";
+import { useEnhancedAction } from "@hooks/use-enhanced-action";
 
 export const SignInForm = () => {
   const form = useForm({
     validate: zodResolver(signInSchema),
     mode: "uncontrolled",
     initialValues: {
-      provider: "ldap",
+      provider: "local",
       email: "",
       password: "",
     },
   });
+  const { execute, isPending } = useEnhancedAction({ action: signIn });
   return (
     <Paper withBorder p="lg">
-      <form onSubmit={form.onSubmit((values) => console.log(values))}>
+      <form
+        onSubmit={form.onSubmit((values) => {
+          execute(values);
+        })}
+      >
         <Stack gap="sm">
           <Title size="h2">Anmelden</Title>
           <Text c="dimmed">
@@ -49,8 +56,7 @@ export const SignInForm = () => {
             key={form.key("password")}
             {...form.getInputProps("password")}
           />
-
-          <Button fullWidth type="submit">
+          <Button loading={isPending} fullWidth type="submit">
             Anmelden
           </Button>
         </Stack>

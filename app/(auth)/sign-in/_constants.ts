@@ -1,4 +1,4 @@
 export const signInProviders = [
   { label: "Windows Anmeldung", value: "ldap" },
-  { label: "Directus Anmeldung", value: "directus" },
+  { label: "Directus Anmeldung", value: "local" },
 ];
