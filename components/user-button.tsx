@@ -1,17 +1,27 @@
+"use client";
+import { useEnhancedAction } from "@/hooks/use-enhanced-action";
+import { signOut } from "@/app/(auth)/sign-in/_actions";
 import { ActionIcon, Avatar, Loader, Menu } from "@mantine/core";
-/* import { signOut, useSession } from "next-auth/react"; */
+import { useSession } from "next-auth/react";
 import React from "react";
 import { Logout } from "tabler-icons-react";
 
 export const UserButton = () => {
-  /* const session = useSession();
+  const session = useSession();
+
+  const { execute } = useEnhancedAction({
+    action: signOut,
+    onSuccess: () => {
+      window.location.reload();
+    },
+  });
 
   if (session.status === "loading") {
     return <Loader />;
   }
   if (!session.data) {
     return null;
-  } */
+  }
   return (
     <Menu shadow="md" width={200} withinPortal>
       <Menu.Target>
@@ -20,14 +30,12 @@ export const UserButton = () => {
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Label>
-          {/* {session.data?.user?.email} */} M.Pohl@drk-rostock.de
-        </Menu.Label>
+        <Menu.Label>{session.data?.user?.email}</Menu.Label>
         <Menu.Item
           icon={<Logout size={16} />}
-          /* onClick={() => {
-            signOut();
-          }} */
+          onClick={() => {
+            execute({});
+          }}
         >
           Abmelden
         </Menu.Item>

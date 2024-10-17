@@ -27,7 +27,12 @@ export const SignInForm = () => {
       password: "",
     },
   });
-  const { execute, isPending } = useEnhancedAction({ action: signIn });
+  const { execute, isPending } = useEnhancedAction({
+    action: signIn,
+    onSuccess: () => {
+      window.location.reload();
+    },
+  });
   return (
     <Paper withBorder p="lg">
       <form

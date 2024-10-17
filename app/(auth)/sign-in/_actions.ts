@@ -3,7 +3,6 @@
 import { actionClient } from "@server/utils/action-clients";
 import { signInSchema } from "./_schemas";
 import { signIn as authSignIn, signOut as authSignOut } from "@lib/auth";
-import { redirect } from "next/navigation";
 
 export const signIn = actionClient
   .schema(signInSchema)
@@ -18,7 +17,6 @@ export const signIn = actionClient
     } catch (error) {
       throw new Error(error.message);
     }
-    redirect("/");
   });
 
 export const signOut = actionClient.action(async () => {
@@ -27,5 +25,4 @@ export const signOut = actionClient.action(async () => {
   } catch (error) {
     throw new Error(error.message);
   }
-  redirect("/sign-in");
 });
