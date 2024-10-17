@@ -1,9 +1,10 @@
-import { signInSchema } from "@/app/(auth)/sign-in/_schemas";
 import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { adminClient, authClient, client } from "./directus/clients";
+import { updateUser } from "@directus/sdk";
 import { v4 as uuidv4 } from "uuid";
-import { readMe, updateUser } from "@directus/sdk";
+import Credentials from "next-auth/providers/credentials";
+import { signInSchema } from "@/app/(auth)/sign-in/_schemas";
+import { adminClient, authClient } from "./directus/clients";
+import { getDirectusUser } from "@server/utils/get-directus-user";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -32,21 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             );
           }
 
-          const user = await client(signIn.access_token as string).request(
-            readMe({
-              fields: [
-                "id",
-                "email",
-                "first_name",
-                "last_name",
-                "avatar",
-                "description",
-                "policies",
-                "title",
-                "location",
-              ],
-            })
-          );
+          const user = await getDirectusUser(signIn.access_token as string);
 
           const token = uuidv4();
           await adminClient.request(
@@ -55,11 +42,69 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             })
           );
 
-          return { ...user, token };
+          return {
+            ...user,
+            token,
+          };
         } catch (error) {
           throw new Error(error.message);
         }
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
+  events: {
+    async signOut(message) {
+      await adminClient.request(
+        updateUser(message.token.id, {
+          token: null,
+        })
+      );
+    },
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.firstName = user.first_name;
+        token.lastName = user.last_name;
+        token.avatar = user.avatar;
+        token.title = user.title;
+        token.location = user.location;
+        token.token = user.token;
+
+        return token;
+      }
+
+      const refreshedUser = await getDirectusUser(token.token as string);
+
+      token.id = refreshedUser.id;
+      token.email = refreshedUser.email;
+      token.firstName = refreshedUser.first_name;
+      token.lastName = refreshedUser.last_name;
+      token.avatar = refreshedUser.avatar;
+      token.title = refreshedUser.title;
+      token.location = refreshedUser.location;
+      token.token = token.token;
+
+      return token;
+    },
+    async session({ session, token }) {
+      session.user = {
+        id: token.id,
+        email: token.email,
+        firstName: token.firstName,
+        lastName: token.lastName,
+        avatar: token.avatar,
+        title: token.title,
+        location: token.location,
+      };
+      session.token = token.token;
+
+      return session;
+    },
+  },
 });
