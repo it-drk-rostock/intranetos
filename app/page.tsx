@@ -1,5 +1,6 @@
-import { Button } from "@mantine/core";
+import { ButtonLink } from "@components/button-link";
+
 
 export default function Home() {
-  return <Button>Test</Button>;
+  return <ButtonLink href="/sign-in">Test</ButtonLink>;
 }
