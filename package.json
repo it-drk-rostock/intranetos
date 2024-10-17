@@ -35,6 +35,7 @@
     "react": "19.0.0-rc-cd22717c-20241013",
     "react-dom": "19.0.0-rc-cd22717c-20241013",
     "recharts": "^2.13.0",
+    "tabler-icons-react": "^1.56.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
