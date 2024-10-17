@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { signInProviders } from "./_constants";
-
-const requiredFieldMessage = "Dieses Feld ist erforderlich";
+import { requiredFieldMessage } from "@constants/required-field-message";
 
 export const signInSchema = z.object({
   provider: z.enum(

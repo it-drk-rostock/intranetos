@@ -21,7 +21,8 @@
       "@/*": ["./*"],
       "@components/*": ["./components/*"],
       "@lib/*": ["./lib/*"],
-      "@providers/*": ["./providers/*"]
+      "@providers/*": ["./providers/*"],
+      "@constants/*": ["./constants/*"]
     },
     "target": "ES2017"
   },
