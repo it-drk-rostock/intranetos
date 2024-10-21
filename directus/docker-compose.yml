@@ -60,10 +60,14 @@ services:
       ADMIN_EMAIL: "admin@drk-rostock.com"
       ADMIN_PASSWORD: "Start.123"
 
-      # Make sure to set this in production
-      # (see https://docs.directus.io/self-hosted/config-options#general)
-      # PUBLIC_URL: "https://directus.example.com"
+      EMAIL_FROM: ${EMAIL_FROM}
+      EMAIL_TRANSPORT: ${EMAIL_TRANSPORT}
+      EMAIL_SMTP_NAME: ${EMAIL_SMTP_NAME}
+      EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
+      EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
+      EMAIL_SMTP_SECURE: ${EMAIL_SMTP_SECURE}
+      EMAIL_SMTP_IGNORE_TLS: ${EMAIL_SMTP_IGNORE_TLS}
+      EMAIL_SMTP_POOL: ${EMAIL_SMTP_POOL}
 
-    # Environment variables can also be defined in a file (for example `.env`):
-    # env_file:
-    #	  - .env
+    env_file:
+      - .env
