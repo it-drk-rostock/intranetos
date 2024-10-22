@@ -19,7 +19,7 @@ export const getCurrentUser = cache(async () => {
     },
     [token],
     {
-      tags: ["user", token],
+      tags: ["user"],
       revalidate: 30,
     }
   )(token);
