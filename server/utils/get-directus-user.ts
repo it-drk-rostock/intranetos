@@ -12,6 +12,7 @@ export type DirectusUserProps = {
   description: string | null;
   title: string | null;
   location: string | null;
+  requested_policies: string[];
 };
 
 export const getDirectusUser = async (
@@ -28,6 +29,7 @@ export const getDirectusUser = async (
         "description",
         "title",
         "location",
+        "requested_policies",
       ],
     })
   )) as DirectusUserProps;
