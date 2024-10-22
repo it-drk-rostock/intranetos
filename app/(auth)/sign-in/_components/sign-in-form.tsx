@@ -1,21 +1,13 @@
 "use client";
 import React from "react";
-import {
-  Button,
-  PasswordInput,
-  TextInput,
-  Stack,
-  Select,
-  Paper,
-  Title,
-  Text,
-} from "@mantine/core";
+import { Button, PasswordInput, TextInput, Stack, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { signInProviders } from "../_constants";
 import { signInSchema } from "../_schemas";
 import { signIn } from "../_actions";
 import { useEnhancedAction } from "@hooks/use-enhanced-action";
+import { CardContainer } from "@/components/card-container";
 
 export const SignInForm = () => {
   const form = useForm({
@@ -34,18 +26,16 @@ export const SignInForm = () => {
     },
   });
   return (
-    <Paper withBorder p="lg">
+    <CardContainer
+      title="Anmelden"
+      description="Um Zugang zu bestimmten Bereichen zu erhalten, müssen Sie sich anmelden."
+    >
       <form
         onSubmit={form.onSubmit((values) => {
           execute(values);
         })}
       >
         <Stack gap="sm">
-          <Title size="h2">Anmelden</Title>
-          <Text c="dimmed">
-            Um Zugang zu bestimmten Bereichen zu erhalten, müssen Sie sich
-            anmelden.
-          </Text>
           <Select
             data={signInProviders}
             key={form.key("provider")}
@@ -66,6 +56,6 @@ export const SignInForm = () => {
           </Button>
         </Stack>
       </form>
-    </Paper>
+    </CardContainer>
   );
 };
