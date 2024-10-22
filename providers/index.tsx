@@ -6,9 +6,12 @@ import { SessionProvider } from "next-auth/react";
 
 import { Session } from "next-auth";
 import { ReactQueryProvider } from "./react-query-provider";
-/* const DirectusPageView = dynamic(() => import("@lib/directus/directus-page-view"), {
-  ssr: false,
-}); */
+const DirectusPageView = dynamic(
+  () => import("@lib/directus/directus-page-view"),
+  {
+    ssr: false,
+  }
+);
 
 export const Providers = ({
   children,
@@ -21,7 +24,7 @@ export const Providers = ({
     <SessionProvider session={session} refetchInterval={30}>
       <ReactQueryProvider>
         <MantineProvider>
-          {/* <DirectusPageView /> */}
+          <DirectusPageView />
           {children}
         </MantineProvider>
       </ReactQueryProvider>
