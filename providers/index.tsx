@@ -1,32 +1,30 @@
 "use client";
-import { getQueryClient } from "@lib/react-query";
-import { QueryClientProvider } from "@tanstack/react-query";
+
 import dynamic from "next/dynamic";
 import { MantineProvider } from "@providers/mantine-provider";
 import { SessionProvider } from "next-auth/react";
 
 import { Session } from "next-auth";
+import { ReactQueryProvider } from "./react-query-provider";
 /* const DirectusPageView = dynamic(() => import("@lib/directus/directus-page-view"), {
   ssr: false,
 }); */
 
-export const Providers = async ({
-  session,
+export const Providers = ({
   children,
+  session,
 }: {
-  session: Session | null;
   children: React.ReactNode;
+  session: Session | null;
 }) => {
-  const queryClient = getQueryClient();
-
   return (
     <SessionProvider session={session} refetchInterval={30}>
-      <QueryClientProvider client={queryClient}>
+      <ReactQueryProvider>
         <MantineProvider>
           {/* <DirectusPageView /> */}
           {children}
         </MantineProvider>
-      </QueryClientProvider>
+      </ReactQueryProvider>
     </SessionProvider>
   );
 };
