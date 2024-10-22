@@ -1,8 +1,9 @@
 import * as Sentry from "@sentry/nextjs";
-/* import { auth } from "@server/auth"; */
 import { z } from "zod";
 import { createSafeActionClient } from "next-safe-action";
-/* import { getUser } from "./get-user"; */
+import { getUser } from "./get-user";
+import { auth } from "@/lib/auth";
+import { trackEvent } from "./track-event";
 
 export const actionClient = createSafeActionClient({
   async handleServerError(e) {
@@ -25,22 +26,22 @@ export const actionClientWithMeta = createSafeActionClient({
   defineMetadataSchema() {
     return z.object({
       permission: z.string().optional(),
-      event: z.string(),
+      event: z.string().optional(),
     });
   },
 });
 
 export const authActionClient = actionClientWithMeta.use(
   async ({ next, metadata }) => {
-    const { userId } = auth();
+    const session = await auth();
 
-    if (!userId) {
+    if (!session) {
       throw new Error("Sie müssen angemeldet sein");
     }
 
-    await rateLimit(userId);
+    /* await rateLimit(userId); */
 
-    const user = await getUser(userId);
+    const user = await getUser(session.token);
 
     if (!user) {
       throw new Error("Benutzer nicht gefunden");
@@ -50,13 +51,13 @@ export const authActionClient = actionClientWithMeta.use(
       await checkAdminOrPermission(user, metadata.permission);
     } */
 
-    /* if (metadata && metadata.event) {
-      trackEvent(userId, metadata.event);
-    } */
+    if (metadata && metadata.event) {
+      trackEvent(session.token, metadata.event);
+    }
     return Sentry.withServerActionInstrumentation(
       metadata?.event ?? "",
       async () => {
-        return next({ ctx: { user, metadata } });
+        return next({ ctx: { user, token: session.token, metadata } });
       }
     );
   }
